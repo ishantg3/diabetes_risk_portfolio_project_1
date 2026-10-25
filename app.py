@@ -102,6 +102,13 @@ for feature in FEATURES:
     lo, hi, step = RANGES[feature]
     default = float(medians[feature])
     default = max(lo, min(hi, default))
+    # Streamlit requires value, min_value, max_value and step to share a
+    # type: integer sliders get ints, decimal sliders get floats.
+    if (float(lo).is_integer() and float(hi).is_integer()
+            and float(step).is_integer()):
+        lo, hi, step, default = int(lo), int(hi), int(step), int(round(default))
+    else:
+        lo, hi, step, default = float(lo), float(hi), float(step), float(default)
     inputs[feature] = st.slider(feature, min_value=lo, max_value=hi,
                                 value=default, step=step)
 
